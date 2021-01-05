@@ -88,7 +88,8 @@ namespace Loretta.CLI
             RawStringRewriter,
             UselessAssignmentRemover,
             SimpleInliner,
-            AllTillNothingMoreToDo
+            AllTillNothingMoreToDo,
+            Localizer
         }
 
         [Command ( "p" ), Command ( "parse" )]
@@ -113,11 +114,12 @@ namespace Loretta.CLI
             };
             var diagnosticList = new DiagnosticList ( );
             var lexerBuilder = new LuaLexerBuilder ( luaOptions );
-            var parserBuilder = new LuaParserBuilder ( luaOptions );
+            var parserBuilder = new LuaParserBuilder ( luaOptions, new[] { "math", "bit", "draw", "render", "string", "vgui", "input", "hook", "surface" } );
             var formattedCodeSerializer = new FormattedLuaCodeSerializer ( luaOptions, "    " );
             var code = File.ReadAllText ( path );
             ILexer<LuaTokenType> lexer = lexerBuilder.CreateLexer ( code, diagnosticList );
-            LuaParser parser = parserBuilder.CreateParser ( new TokenReader<LuaTokenType> ( lexer ), diagnosticList );
+            LuaParser parser = parserBuilder.CreateParser ( new TokenReader<LuaTokenType> ( lexer ), diagnosticList, out Scope rootScope );
+
             StatementList statementList = parser.Parse ( );
             foreach ( ASTVisitors visitor in visitors )
             {
@@ -132,6 +134,12 @@ namespace Loretta.CLI
                     case ASTVisitors.RawStringRewriter:
                     {
                         statementList = rawStringRewriter ( statementList );
+                        break;
+                    }
+
+                    case ASTVisitors.Localizer:
+                    {
+                        statementList = localizer ( statementList, rootScope );
                         break;
                     }
 
@@ -171,6 +179,12 @@ namespace Loretta.CLI
                 statementList = new RawStringRewriter ( ).VisitNode ( statementList ) as StatementList;
                 return statementList;
             }
+
+            static StatementList localizer ( StatementList statementList, Scope rootScope )
+            {
+                statementList = Localizer.Localize ( statementList, rootScope );
+                return statementList;
+            }
         }
 
         [Command ( "mp" ), Command ( "mass-parse" )]
@@ -194,7 +208,7 @@ namespace Loretta.CLI
                 _ => throw new InvalidOperationException ( ),
             };
             var lexerBuilder = new LuaLexerBuilder ( luaOptions );
-            var parserBuilder = new LuaParserBuilder ( luaOptions );
+            var parserBuilder = new LuaParserBuilder ( luaOptions, Enumerable.Empty<String> ( ) );
             foreach ( var file in files )
             {
                 var stopwatch = Stopwatch.StartNew ( );
@@ -204,7 +218,7 @@ namespace Loretta.CLI
                 try
                 {
                     ILexer<LuaTokenType> lexer = lexerBuilder.CreateLexer ( code, diagnosticList );
-                    LuaParser parser = parserBuilder.CreateParser ( new TokenReader<LuaTokenType> ( lexer ), diagnosticList );
+                    LuaParser parser = parserBuilder.CreateParser ( new TokenReader<LuaTokenType> ( lexer ), diagnosticList, out _ );
                     StatementList statementList = parser.Parse ( );
                     formattedCodeSerializer.VisitNode ( statementList );
                     stopwatch.Stop ( );

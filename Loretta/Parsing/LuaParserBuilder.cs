@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GParse;
 using GParse.Lexing;
 using GParse.Parsing;
@@ -18,6 +19,7 @@ namespace Loretta.Parsing
         /// The lua options to be used by this builder and the parsers it builds.
         /// </summary>
         public LuaOptions LuaOptions { get; }
+        public IEnumerable<String> Globals { get; }
 
         private static Boolean StringExpressionFactory ( LuaToken token, out Expression expression )
         {
@@ -53,9 +55,10 @@ namespace Loretta.Parsing
         /// Initializes a new lua parser builder.
         /// </summary>
         /// <param name="luaOptions">The lua options to be used.</param>
-        public LuaParserBuilder ( LuaOptions luaOptions )
+        public LuaParserBuilder ( LuaOptions luaOptions, IEnumerable<String> globals )
         {
-            this.LuaOptions = luaOptions;
+            this.LuaOptions = luaOptions ?? throw new ArgumentNullException ( nameof ( luaOptions ) );
+            this.Globals = globals ?? throw new ArgumentNullException ( nameof ( globals ) );
 
             #region Value Expressions
 
@@ -187,8 +190,14 @@ namespace Loretta.Parsing
         /// </summary>
         /// <param name="reader">The token reader to use.</param>
         /// <param name="diagnosticEmmiter">The diagnostic emitter.</param>
+        /// <param name="rootScope"></param>
         /// <returns></returns>
-        public new LuaParser CreateParser ( ITokenReader<LuaTokenType> reader, IProgress<Diagnostic> diagnosticEmmiter ) =>
-            new LuaParser ( this.LuaOptions, reader, this.prefixModuleTree, this.infixModuleTree, diagnosticEmmiter );
+        public LuaParser CreateParser ( ITokenReader<LuaTokenType> reader, IProgress<Diagnostic> diagnosticEmmiter, out Scope rootScope )
+        {
+            var parser = new LuaParser ( this.LuaOptions, reader, this.prefixModuleTree, this.infixModuleTree, diagnosticEmmiter );
+            rootScope = parser.EnterScope ( true );
+            foreach ( var global in this.Globals ) rootScope.AddVariable ( new Variable ( global, rootScope ) );
+            return parser;
+        }
     }
 }

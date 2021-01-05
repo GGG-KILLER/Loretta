@@ -144,6 +144,13 @@ namespace Loretta.Parsing
 
         #endregion GetVariable
 
+        /// <summary>
+        /// Adds a variable to this scope.
+        /// </summary>
+        /// <param name="variable"></param>
+        public void AddVariable ( Variable variable ) =>
+            this._variables.Add ( variable.Identifier, variable );
+
         #region FindLabel
 
         /// <summary>
