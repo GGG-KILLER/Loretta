@@ -83,7 +83,7 @@ namespace Loretta.CodeAnalysis.Collections
                 else
                 {
                     _items = new SegmentedArray<T>(count);
-                    if ((T[][])_items.SyncRoot is { Length: 1 } segments)
+                    if ((T[][]) _items.SyncRoot is { Length: 1 } segments)
                     {
                         c.CopyTo(segments[0], 0);
                         _size = count;
@@ -162,7 +162,7 @@ namespace Loretta.CodeAnalysis.Collections
             get
             {
                 // Following trick can reduce the range check by one
-                if ((uint)index >= (uint)_size)
+                if ((uint) index >= (uint) _size)
                 {
                     ThrowHelper.ThrowArgumentOutOfRange_IndexException();
                 }
@@ -171,7 +171,7 @@ namespace Loretta.CodeAnalysis.Collections
 
             set
             {
-                if ((uint)index >= (uint)_size)
+                if ((uint) index >= (uint) _size)
                 {
                     ThrowHelper.ThrowArgumentOutOfRange_IndexException();
                 }
@@ -196,7 +196,7 @@ namespace Loretta.CodeAnalysis.Collections
 
                 try
                 {
-                    this[index] = (T)value!;
+                    this[index] = (T) value!;
                 }
                 catch (InvalidCastException)
                 {
@@ -215,7 +215,7 @@ namespace Loretta.CodeAnalysis.Collections
             _version++;
             var array = _items;
             var size = _size;
-            if ((uint)size < (uint)array.Length)
+            if ((uint) size < (uint) array.Length)
             {
                 _size = size + 1;
                 array[size] = item;
@@ -242,7 +242,7 @@ namespace Loretta.CodeAnalysis.Collections
 
             try
             {
-                Add((T)item!);
+                Add((T) item!);
             }
             catch (InvalidCastException)
             {
@@ -342,7 +342,7 @@ namespace Loretta.CodeAnalysis.Collections
         {
             if (IsCompatibleObject(item))
             {
-                return Contains((T)item!);
+                return Contains((T) item!);
             }
             return false;
         }
@@ -421,7 +421,7 @@ namespace Loretta.CodeAnalysis.Collections
                 var newCapacity = _items.Length == 0 ? DefaultCapacity : _items.Length * 2;
                 // Allow the list to grow to maximum possible capacity (~2G elements) before encountering overflow.
                 // Note that this check works even when _items.Length overflowed thanks to the (uint) cast
-                if ((uint)newCapacity > MaxArrayLength)
+                if ((uint) newCapacity > MaxArrayLength)
                     newCapacity = MaxArrayLength;
                 if (newCapacity < min)
                     newCapacity = min;
@@ -475,7 +475,7 @@ namespace Loretta.CodeAnalysis.Collections
 
         public int FindIndex(int startIndex, int count, Predicate<T> match)
         {
-            if ((uint)startIndex > (uint)_size)
+            if ((uint) startIndex > (uint) _size)
             {
                 ThrowHelper.ThrowStartIndexArgumentOutOfRange_ArgumentOutOfRange_Index();
             }
@@ -540,7 +540,7 @@ namespace Loretta.CodeAnalysis.Collections
             else
             {
                 // Make sure we're not out of range
-                if ((uint)startIndex >= (uint)_size)
+                if ((uint) startIndex >= (uint) _size)
                 {
                     ThrowHelper.ThrowStartIndexArgumentOutOfRange_ArgumentOutOfRange_Index();
                 }
@@ -637,7 +637,7 @@ namespace Loretta.CodeAnalysis.Collections
         {
             if (IsCompatibleObject(item))
             {
-                return IndexOf((T)item!);
+                return IndexOf((T) item!);
             }
             return -1;
         }
@@ -685,7 +685,7 @@ namespace Loretta.CodeAnalysis.Collections
         public void Insert(int index, T item)
         {
             // Note that insertions at the end are legal.
-            if ((uint)index > (uint)_size)
+            if ((uint) index > (uint) _size)
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index, ExceptionResource.ArgumentOutOfRange_ListInsert);
             }
@@ -706,7 +706,7 @@ namespace Loretta.CodeAnalysis.Collections
 
             try
             {
-                Insert(index, (T)item!);
+                Insert(index, (T) item!);
             }
             catch (InvalidCastException)
             {
@@ -726,7 +726,7 @@ namespace Loretta.CodeAnalysis.Collections
                 ThrowHelper.ThrowArgumentNullException(ExceptionArgument.collection);
             }
 
-            if ((uint)index > (uint)_size)
+            if ((uint) index > (uint) _size)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexException();
             }
@@ -749,6 +749,14 @@ namespace Loretta.CodeAnalysis.Collections
                         SegmentedArray.Copy(_items, 0, _items, index, index);
                         // Copy last part of _items back to inserted location
                         SegmentedArray.Copy(_items, index + count, _items, index * 2, _size - index);
+                    }
+                    else if (c is SegmentedList<T> list)
+                    {
+                        SegmentedArray.Copy(list._items, 0, _items, index, list.Count);
+                    }
+                    else if (c is SegmentedArray<T> array)
+                    {
+                        SegmentedArray.Copy(array, 0, _items, index, array.Length);
                     }
                     else
                     {
@@ -864,7 +872,7 @@ namespace Loretta.CodeAnalysis.Collections
         {
             if (IsCompatibleObject(item))
             {
-                Remove((T)item!);
+                Remove((T) item!);
             }
         }
 
@@ -916,7 +924,7 @@ namespace Loretta.CodeAnalysis.Collections
         // decreased by one.
         public void RemoveAt(int index)
         {
-            if ((uint)index >= (uint)_size)
+            if ((uint) index >= (uint) _size)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexException();
             }
@@ -1082,7 +1090,7 @@ namespace Loretta.CodeAnalysis.Collections
         //
         public void TrimExcess()
         {
-            var threshold = (int)(((double)_items.Length) * 0.9);
+            var threshold = (int) (((double) _items.Length) * 0.9);
             if (_size < threshold)
             {
                 Capacity = _size;
@@ -1129,7 +1137,7 @@ namespace Loretta.CodeAnalysis.Collections
             {
                 var localList = _list;
 
-                if (_version == localList._version && ((uint)_index < (uint)localList._size))
+                if (_version == localList._version && ((uint) _index < (uint) localList._size))
                 {
                     _current = localList._items[_index];
                     _index++;
