@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Loretta.CodeAnalysis.Lua.Syntax;
 using Loretta.Utilities;
 
@@ -9,6 +10,7 @@ namespace Loretta.CodeAnalysis.Lua
     /// <summary>
     /// The base interface for scopes.
     /// </summary>
+    [InternalImplementationOnly]
     public interface IScope
     {
         /// <summary>

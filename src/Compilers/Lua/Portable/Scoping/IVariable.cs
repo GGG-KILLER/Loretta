@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Loretta.Utilities;
 
 namespace Loretta.CodeAnalysis.Lua
@@ -6,6 +7,7 @@ namespace Loretta.CodeAnalysis.Lua
     /// <summary>
     /// The base interface for variables
     /// </summary>
+    [InternalImplementationOnly]
     public interface IVariable
     {
         /// <summary>

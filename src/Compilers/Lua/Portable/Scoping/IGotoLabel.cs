@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Loretta.CodeAnalysis.Lua.Syntax;
 using Loretta.Utilities;
 
@@ -7,6 +8,7 @@ namespace Loretta.CodeAnalysis.Lua
     /// <summary>
     /// The interface for a goto label.
     /// </summary>
+    [InternalImplementationOnly]
     public interface IGotoLabel
     {
         /// <summary>

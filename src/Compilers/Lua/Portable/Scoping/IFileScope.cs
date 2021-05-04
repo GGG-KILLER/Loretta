@@ -1,8 +1,11 @@
-﻿namespace Loretta.CodeAnalysis.Lua
+﻿using System.Runtime.CompilerServices;
+
+namespace Loretta.CodeAnalysis.Lua
 {
     /// <summary>
     /// A file's scope.
     /// </summary>
+    [InternalImplementationOnly]
     public interface IFileScope : IScope
     {
         /// <summary>
