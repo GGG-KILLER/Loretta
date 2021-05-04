@@ -1,0 +1,4 @@
+[*.cs]
+
+# RS2008: Enable analyzer release tracking (our generators are private so no need)
+dotnet_diagnostic.RS2008.severity = none
