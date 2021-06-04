@@ -30,6 +30,13 @@ jobs:
           dotnet-version: 5.0.x
         env:
           DOTNET_INSTALL_DIR: C:\Program Files\dotnet
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+          include-prerelease: True
+        env:
+          DOTNET_INSTALL_DIR: ${{ matrix.installDir }}
       - name: Install dependencies
         run: dotnet restore
       - name: Build
