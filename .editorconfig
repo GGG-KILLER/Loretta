@@ -81,7 +81,7 @@ csharp_style_var_when_type_is_apparent = true
 
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = when_on_single_line:suggestion
-csharp_style_expression_bodied_constructors = false:error
+csharp_style_expression_bodied_constructors = when_on_single_line:suggestion
 csharp_style_expression_bodied_indexers = when_on_single_line:suggestion
 csharp_style_expression_bodied_lambdas = when_on_single_line:suggestion
 csharp_style_expression_bodied_local_functions = when_on_single_line:suggestion
@@ -198,6 +198,10 @@ dotnet_naming_rule.non_static_private_field_should_be_camelcase_prefixed_by_unde
 dotnet_naming_rule.non_static_private_field_should_be_camelcase_prefixed_by_underline.symbols = non_static_private_field
 dotnet_naming_rule.non_static_private_field_should_be_camelcase_prefixed_by_underline.style = camelcase_prefixed_by_underline
 
+dotnet_naming_rule.static_private_field_should_be_camelcase_prefixed_by__s__.severity = suggestion
+dotnet_naming_rule.static_private_field_should_be_camelcase_prefixed_by__s__.symbols = static_private_field
+dotnet_naming_rule.static_private_field_should_be_camelcase_prefixed_by__s__.style = camelcase_prefixed_by__s__
+
 # Symbol specifications
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
@@ -217,8 +221,12 @@ dotnet_naming_symbols.type_parameter.applicable_accessibilities = *
 dotnet_naming_symbols.type_parameter.required_modifiers = *
 
 dotnet_naming_symbols.non_static_private_field.applicable_kinds = field
-dotnet_naming_symbols.non_static_private_field.applicable_accessibilities = private, protected
+dotnet_naming_symbols.non_static_private_field.applicable_accessibilities = private, protected, private_protected
 dotnet_naming_symbols.non_static_private_field.required_modifiers = 
+
+dotnet_naming_symbols.static_private_field.applicable_kinds = field
+dotnet_naming_symbols.static_private_field.applicable_accessibilities = private, protected, private_protected
+dotnet_naming_symbols.static_private_field.required_modifiers = static
 
 # Naming styles
 
@@ -241,6 +249,11 @@ dotnet_naming_style.camelcase_prefixed_by_underline.required_prefix = _
 dotnet_naming_style.camelcase_prefixed_by_underline.required_suffix = 
 dotnet_naming_style.camelcase_prefixed_by_underline.word_separator = 
 dotnet_naming_style.camelcase_prefixed_by_underline.capitalization = camel_case
+
+dotnet_naming_style.camelcase_prefixed_by__s__.required_prefix = s_
+dotnet_naming_style.camelcase_prefixed_by__s__.required_suffix = 
+dotnet_naming_style.camelcase_prefixed_by__s__.word_separator = 
+dotnet_naming_style.camelcase_prefixed_by__s__.capitalization = camel_case
 
 # Severity settings
 dotnet_diagnostic.CA1303.severity = none
